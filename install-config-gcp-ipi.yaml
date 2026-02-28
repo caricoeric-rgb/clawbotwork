@@ -1,0 +1,38 @@
+apiVersion: v1
+baseDomain: {{YOUR_BASE_DOMAIN}}
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    gcp:
+      instanceType: {{WORKER_INSTANCE_TYPE}} # Example: n1-standard-4
+  replicas: 3
+controlPlane:
+  architecture: amd4
+  hyperthreading: Enabled
+  name: master
+  platform:
+    gcp:
+      instanceType: {{MASTER_INSTANCE_TYPE}} # Example: n1-standard-4
+  replicas: 3
+imageContentSources:
+- mirrors:
+  - {{YOUR_MIRROR_REGISTRY_URL}} # Optional: Add if you use custom mirror registries
+  id: cluster-images
+installConfig:
+  sshKey: {{YOUR_SSH_PUBLIC_KEY}}
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  gcp:
+    region: {{YOUR_GCP_REGION}} # Example: us-central1
+publish: External # Set to 'Internal' if you do not need external access for testing
+pullSecret: '{{YOUR_PULL_SECRET}}'
