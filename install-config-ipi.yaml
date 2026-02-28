@@ -1,0 +1,42 @@
+apiVersion: v1
+baseDomain: {{YOUR_BASE_DOMAIN}}
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    ibmcloud:
+      instanceType: {{WORKER_INSTANCE_TYPE}} # Example: bx2-4x16
+      resourceGroupID: {{YOUR_RESOURCE_GROUP_ID}}
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    ibmcloud:
+      instanceType: {{MASTER_INSTANCE_TYPE}} # Example: bx2-4x16
+      resourceGroupID: {{YOUR_RESOURCE_GROUP_ID}}
+  replicas: 3
+imageContentSources:
+- mirrors:
+  - {{YOUR_MIRROR_REGISTRY_URL}} # Optional: Add if you use custom mirror registries
+  id: cluster-images
+installConfig:
+  sshKey: {{YOUR_SSH_PUBLIC_KEY}}
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  ibmcloud:
+    apiKey: {{YOUR_IBMCLOUD_API_KEY}} # IMPORTANT: Keep this secure!
+    region: {{YOUR_IBMCLOUD_REGION}} # Example: us-south
+    resourceGroupID: {{YOUR_RESOURCE_GROUP_ID}}
+publish: External # Set to 'Internal' if you do not need external access for testing
+pullSecret: '{{YOUR_PULL_SECRET}}'
